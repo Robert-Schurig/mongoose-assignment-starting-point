@@ -47,19 +47,25 @@ const Products = () => {
     }
   }
 
-  async function addProduct() {
-    try {
-      const url = `/api/products/` + idToDelete;
+  async function addProduct(event) {
+    event.preventDefault();
+    const data = Object.fromEntries(new FormData(event.target));
+    const newProduct = {
+      name: data.name,
+      category: data.category,
+      detail: data.detail,
+    };
 
-      const response = await fetch(url, { method: "POST" });
-      if (response.ok) {
-        const data = await response.json();
-        setProducts(products.filter((product) => product._id !== data._id));
-      } else {
-        throw new Error(`Fetch fehlgeschlagen mit Status: ${response.status}`);
-      }
+    try {
+      const url = `/api/products/`;
+
+      const response = await fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(newProduct),
+      });
     } catch (error) {
-      console.log(errorr);
+      console.log(error);
       alert(error.message);
     }
   }
@@ -100,17 +106,17 @@ const Products = () => {
           })}
         </ul>
         <>
-          <form>
+          <form onSubmit={addProduct}>
             <label htmlFor="Product">Product</label>
-            <input id="name" type="text" required />
+            <input id="name" name="name" type="text" required />
             <br />
             <label htmlFor="category">Category</label>
-            <input id="category" type="text" required />
+            <input id="category" name="category" type="text" required />
             <br />
             <label htmlFor="detail">Detail</label>
-            <input id="detail" type="text" required />
+            <input id="detail" name="detail" type="text" required />
             <br />
-            <button>Submit</button>
+            <button type="submit">Submit</button>
           </form>
         </>
       </div>
