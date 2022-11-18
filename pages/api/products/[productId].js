@@ -17,7 +17,7 @@ async function handler(req, res) {
 
     case "DELETE":
       try {
-        const product = await Product.findOneAndDelete(req.query.productId);
+        const product = await Product.findByIdAndDelete(req.query.productId);
         if (product) {
           return res.status(200).json(product);
         } else {
