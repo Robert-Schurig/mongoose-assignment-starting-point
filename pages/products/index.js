@@ -30,6 +30,40 @@ const Products = () => {
     getProducts();
   }, [categoryFilter]);
 
+  async function deleteProduct(idToDelete) {
+    try {
+      const url = `/api/products/` + idToDelete;
+
+      const response = await fetch(url, { method: "DELETE" });
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(products.filter((product) => product._id !== data._id));
+      } else {
+        throw new Error(`Fetch fehlgeschlagen mit Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.log(errorr);
+      alert(error.message);
+    }
+  }
+
+  async function addProduct() {
+    try {
+      const url = `/api/products/` + idToDelete;
+
+      const response = await fetch(url, { method: "POST" });
+      if (response.ok) {
+        const data = await response.json();
+        setProducts(products.filter((product) => product._id !== data._id));
+      } else {
+        throw new Error(`Fetch fehlgeschlagen mit Status: ${response.status}`);
+      }
+    } catch (error) {
+      console.log(errorr);
+      alert(error.message);
+    }
+  }
+
   return (
     <>
       <Head>
@@ -58,10 +92,27 @@ const Products = () => {
             return (
               <li key={product._id}>
                 <Link href={`/products/${product._id}`}>{product.name}</Link>
+                <button onClick={() => deleteProduct(product._id)}>
+                  Löschen
+                </button>
               </li>
             );
           })}
         </ul>
+        <>
+          <form>
+            <label htmlFor="Product">Product</label>
+            <input id="name" type="text" required />
+            <br />
+            <label htmlFor="category">Category</label>
+            <input id="category" type="text" required />
+            <br />
+            <label htmlFor="detail">Detail</label>
+            <input id="detail" type="text" required />
+            <br />
+            <button>Submit</button>
+          </form>
+        </>
       </div>
     </>
   );
